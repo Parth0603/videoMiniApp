@@ -1,4 +1,5 @@
 #!/bin/bash
+chmod +x render-start.sh
 
 # Install yt-dlp using pip3 (upgrade if already installed)
 pip3 install --upgrade yt-dlp
