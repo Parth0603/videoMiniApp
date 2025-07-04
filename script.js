@@ -31,11 +31,6 @@ const showToast = (title, description, variant = 'default') => {
   }, 3000);
 };
 
-const API_BASE_URL = window.location.hostname === 'localhost'
-  ? 'http://localhost:3000'
-  : 'https://videominiapp.onrender.com';
-
-
   const handleDownload = () => {
   const url = urlInput.value.trim();
 
@@ -47,7 +42,7 @@ const API_BASE_URL = window.location.hostname === 'localhost'
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 20000); // 20 sec timeout
 
-  fetch(`${API_BASE_URL}/api/download`, {
+  fetch(`https://videominiapp.onrender.com/api/download`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ url }),

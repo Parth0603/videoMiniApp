@@ -5,13 +5,12 @@ const youtubeDl = require("youtube-dl-exec").default; // Note the .default
 const PORT = process.env.PORT || 3000;
 
 const app = express();
-app.use(cors(
-  {
-  origin: "https://videominiapp.netlify.app",
-  
-  // your frontend URL here
-}
-));
+
+app.use(cors({
+  origin: ["http://127.0.0.1:5500", "https://videominiapp.netlify.app"]
+}));
+
+
 app.use(bodyParser.json());
 
 app.post("/api/download", async (req, res) => {
