@@ -49,7 +49,7 @@ const showToast = (title, description, variant = 'default') => {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 20000); // 20 sec timeout
 
-  fetch('http://localhost:3000/api/download', {
+  fetch('https://videominiapp.onrender.com/api/download', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ url }),
