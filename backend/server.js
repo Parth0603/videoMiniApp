@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const youtubeDl = require("youtube-dl-exec");
+const { exec } = require("child_process");
 const PORT = process.env.PORT || 3000;
 
 const app = express();
@@ -12,31 +12,20 @@ app.use(cors({
 
 app.use(bodyParser.json());
 
-app.post("/api/download", async (req, res) => {
+app.post("/api/download", (req, res) => {
   const videoUrl = req.body.url;
   if (!videoUrl) return res.status(400).json({ error: "URL required" });
 
-  try {
-    const output = await youtubeDl(videoUrl, {
-      format: "best",
-      dumpSingleJson: true,
-      noWarnings: true,
-      noCallHome: true,
-      noPlaylist: true,
-      simulate: true,
-      // ✅ Use yt-dlp binary instead of youtube-dl
-      exec: "yt-dlp"
-    });
-
-    if (!output || !output.url) {
+  // ✅ Use yt-dlp directly (not youtube-dl or youtube-dl-exec)
+  exec(`yt-dlp -f best -g "${videoUrl}"`, (err, stdout, stderr) => {
+    if (err) {
+      console.error("yt-dlp error:", stderr);
       return res.status(500).json({ error: "Failed to fetch download link" });
     }
 
-    res.json({ downloadUrl: output.url });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to fetch download link" });
-  }
+    const downloadUrl = stdout.trim();
+    res.json({ downloadUrl });
+  });
 });
 
 app.listen(PORT, () => {
