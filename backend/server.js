@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const youtubeDl = require("youtube-dl-exec").default; // Note the .default
+const youtubeDl = require("youtube-dl-exec"); // Note the .default
 const PORT = process.env.PORT || 3000;
 
 const app = express();
