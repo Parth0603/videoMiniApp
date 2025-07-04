@@ -31,12 +31,10 @@ const showToast = (title, description, variant = 'default') => {
   }, 3000);
 };
 
- const shortenUrl = async (longUrl) => {
-  const response = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`);
-  if (!response.ok) throw new Error('Failed to shorten URL');
-  const data = await response.json();
-  return data.shorturl;
-};
+const API_BASE_URL = window.location.hostname === 'localhost'
+  ? 'http://localhost:3000'
+  : 'https://videominiapp.onrender.com';
+
 
   const handleDownload = () => {
   const url = urlInput.value.trim();
@@ -49,7 +47,7 @@ const showToast = (title, description, variant = 'default') => {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 20000); // 20 sec timeout
 
-  fetch('https://videominiapp.onrender.com/api/download', {
+  fetch(`${API_BASE_URL}/api/download`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ url }),

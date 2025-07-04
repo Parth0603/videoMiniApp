@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "backend/server.js",
   "scripts": {
-    "start": "node server.js"
-  },
+  "start": "./render-start.sh"
+}
+,
   "keywords": [],
   "author": "",
   "license": "ISC",
