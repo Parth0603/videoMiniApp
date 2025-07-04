@@ -1,8 +1,9 @@
 const urlInput = document.getElementById('videoUrl');
+const cookiesInput = document.getElementById('cookiesFile'); // new
 const downloadButton = document.getElementById('downloadButton');
 const loadingSpinner = document.getElementById('loadingSpinner');
 const resultSection = document.getElementById('resultSection');
-const downloadLink = document.getElementById('result'); // Fixed element for showing link
+const downloadLink = document.getElementById('result');
 const copyButton = document.getElementById('copyButton');
 const downloadNowButton = document.getElementById('downloadNowButton');
 const downloadAnotherButton = document.getElementById('downloadAnotherButton');
@@ -43,22 +44,27 @@ const handleDownload = () => {
     return;
   }
 
-  // Disable button and show spinner
   downloadButton.disabled = true;
   loadingSpinner?.classList.remove('hidden');
+
+  // Prepare form data because we might have a file
+  const formData = new FormData();
+  formData.append('url', url);
+
+  if (cookiesInput.files.length > 0) {
+    formData.append('cookiesFile', cookiesInput.files[0]);
+  }
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 20000); // 20 sec timeout
 
-  fetch(`https://videominiapp.onrender.com/api/download`, {
+  fetch('https://videominiapp.onrender.com/api/download', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url }),
-    signal: controller.signal
+    body: formData,
+    signal: controller.signal,
   })
     .then((res) => res.json())
     .then((data) => {
-      console.log(data);
       if (data.downloadUrl) {
         downloadLink.innerHTML = `<a href="${data.downloadUrl}" target="_blank" rel="noopener noreferrer">Download Link</a>`;
         resultSection.classList.remove('hidden');
@@ -81,7 +87,6 @@ const handleDownload = () => {
     });
 };
 
-// Event Listeners
 downloadButton.addEventListener('click', handleDownload);
 
 urlInput.addEventListener('keypress', (e) => {
@@ -97,7 +102,7 @@ copyButton.addEventListener('click', async () => {
     } else {
       throw new Error('No link found');
     }
-  } catch (err) {
+  } catch {
     showToast('Failed to copy', 'Please copy the link manually', 'destructive');
   }
 });
@@ -106,12 +111,9 @@ downloadNowButton.addEventListener('click', () => {
   let link;
   try {
     const anchor = downloadLink.querySelector('a');
-    if (anchor) {
-      link = anchor.href;
-    } else {
-      throw new Error('No link found');
-    }
-  } catch (err) {
+    if (anchor) link = anchor.href;
+    else throw new Error('No link found');
+  } catch {
     showToast('Failed to open', 'Please open the link manually', 'destructive');
   }
   if (!link) {
@@ -123,6 +125,7 @@ downloadNowButton.addEventListener('click', () => {
 
 downloadAnotherButton.addEventListener('click', () => {
   urlInput.value = '';
+  cookiesInput.value = '';
   downloadLink.textContent = '';
   resultSection.classList.add('hidden');
   showToast('Ready!', 'Paste another video URL');
