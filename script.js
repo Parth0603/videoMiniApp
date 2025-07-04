@@ -55,7 +55,7 @@ const API_BASE_URL = window.location.hostname === 'localhost'
   })
     .then((res) => res.json())
     .then((data) => {
-      
+      console.log(data);
       if (data.downloadUrl) {
         downloadLink.innerHTML = `<a href="${data.downloadUrl}" target="blank_">Download Link</a>`;
         resultSection.classList.remove('hidden');
