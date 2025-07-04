@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const youtubeDl = require("youtube-dl-exec"); // Note the .default
+const youtubeDl = require("youtube-dl-exec");
 const PORT = process.env.PORT || 3000;
 
 const app = express();
@@ -10,7 +10,6 @@ app.use(cors({
   origin: ["http://127.0.0.1:5500", "https://videominiapp.netlify.app"]
 }));
 
-
 app.use(bodyParser.json());
 
 app.post("/api/download", async (req, res) => {
@@ -18,18 +17,21 @@ app.post("/api/download", async (req, res) => {
   if (!videoUrl) return res.status(400).json({ error: "URL required" });
 
   try {
-   const output = await youtubeDl(videoUrl, {
-  format: "best",
-  dumpSingleJson: true,
-  noWarnings: true,
-  noCallHome: true,
-  noPlaylist: true,
-  simulate: true,
-});
+    const output = await youtubeDl(videoUrl, {
+      format: "best",
+      dumpSingleJson: true,
+      noWarnings: true,
+      noCallHome: true,
+      noPlaylist: true,
+      simulate: true,
+      // ✅ Use yt-dlp binary instead of youtube-dl
+      youtubeDl: "yt-dlp"
+    });
 
     if (!output || !output.url) {
       return res.status(500).json({ error: "Failed to fetch download link" });
     }
+
     res.json({ downloadUrl: output.url });
   } catch (error) {
     console.error(error);
