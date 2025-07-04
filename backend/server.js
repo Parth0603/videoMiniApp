@@ -25,7 +25,7 @@ app.post("/api/download", async (req, res) => {
       noPlaylist: true,
       simulate: true,
       // ✅ Use yt-dlp binary instead of youtube-dl
-      youtubeDl: "yt-dlp"
+      exec: "yt-dlp"
     });
 
     if (!output || !output.url) {
