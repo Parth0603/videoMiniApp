@@ -1,32 +1,40 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const { exec } = require("child_process");
+const { youtubeDl } = require("youtube-dl-exec");
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.post("/api/download", (req, res) => {
+app.post("/api/download", async (req, res) => {
   const videoUrl = req.body.url;
   if (!videoUrl) return res.status(400).json({ error: "URL required" });
 
-  // Use yt-dlp to extract the download link
-  exec(`yt-dlp -f best -g "${videoUrl}"`, (err, stdout, stderr) => {
-    if (err) {
-      console.error(stderr);
-      return res.status(500).json({ error: "Failed to fetch download link" });
+  try {
+    // Use youtube-dl-exec to get best format direct URL
+    const info = await youtubeDl(videoUrl, {
+      dumpSingleJson: true,
+      noCheckCertificates: true,
+      noWarnings: true,
+      preferFreeFormats: true,
+      youtubeSkipDashManifest: true,
+      format: "best",
+    });
+
+    // 'url' property holds the direct download link
+    if (!info || !info.url) {
+      return res.status(500).json({ error: "Could not extract download URL" });
     }
-    const downloadUrl = stdout.trim();
-    res.json({ downloadUrl });
-  });
+
+    res.json({ downloadUrl: info.url });
+  } catch (error) {
+    console.error("youtube-dl-exec error:", error);
+    res.status(500).json({ error: "Failed to fetch download link" });
+  }
 });
 
-app.listen(3000, () => {
-  console.log("Server running on https://videominiapp.onrender.com/");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
-
-
-
-
- 
