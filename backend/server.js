@@ -6,7 +6,11 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 app.use(cors(
- 
+  {
+  origin: "https://videominiapp.netlify.app",
+  
+  // your frontend URL here
+}
 ));
 app.use(bodyParser.json());
 
