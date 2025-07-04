@@ -18,15 +18,15 @@ app.post("/api/download", async (req, res) => {
   if (!videoUrl) return res.status(400).json({ error: "URL required" });
 
   try {
-    const output = await youtubeDl(videoUrl, {
-      format: "best",
-      dumpSingleJson: true,
-      noWarnings: true,
-      noCheckCertificates: true,
-      noCallHome: true,
-      noPlaylist: true,
-      simulate: true,
-    });
+   const output = await youtubeDl(videoUrl, {
+  format: "best",
+  dumpSingleJson: true,
+  noWarnings: true,
+  noCallHome: true,
+  noPlaylist: true,
+  simulate: true,
+});
+
     if (!output || !output.url) {
       return res.status(500).json({ error: "Failed to fetch download link" });
     }
