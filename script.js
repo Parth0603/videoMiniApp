@@ -2,7 +2,7 @@ const urlInput = document.getElementById('videoUrl');
 const downloadButton = document.getElementById('downloadButton');
 const loadingSpinner = document.getElementById('loadingSpinner');
 const resultSection = document.getElementById('resultSection');
-const downloadLink = document.getElementById('result'); // FIXED
+const downloadLink = document.getElementById('result'); // Fixed element for showing link
 const copyButton = document.getElementById('copyButton');
 const downloadNowButton = document.getElementById('downloadNowButton');
 const downloadAnotherButton = document.getElementById('downloadAnotherButton');
@@ -16,7 +16,11 @@ const showToast = (title, description, variant = 'default') => {
   toast.innerHTML = `
     <div class="flex items-start space-x-2">
       <svg class="w-5 h-5 mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2">
-        ${variant === 'destructive' ? '<path d="M12 2v20m10-10H2"></path>' : '<polyline points="20 6 9 17 4 12"></polyline>'}
+        ${
+          variant === 'destructive'
+            ? '<path d="M12 2v20m10-10H2"></path>'
+            : '<polyline points="20 6 9 17 4 12"></polyline>'
+        }
       </svg>
       <div>
         <h4 class="font-semibold">${title}</h4>
@@ -31,13 +35,17 @@ const showToast = (title, description, variant = 'default') => {
   }, 3000);
 };
 
-  const handleDownload = () => {
+const handleDownload = () => {
   const url = urlInput.value.trim();
 
   if (!url) {
     showToast('Please enter a URL', 'Paste a video URL to get started', 'destructive');
     return;
   }
+
+  // Disable button and show spinner
+  downloadButton.disabled = true;
+  loadingSpinner?.classList.remove('hidden');
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 20000); // 20 sec timeout
@@ -52,7 +60,7 @@ const showToast = (title, description, variant = 'default') => {
     .then((data) => {
       console.log(data);
       if (data.downloadUrl) {
-        downloadLink.innerHTML = `<a href="${data.downloadUrl}" target="blank_">Download Link</a>`;
+        downloadLink.innerHTML = `<a href="${data.downloadUrl}" target="_blank" rel="noopener noreferrer">Download Link</a>`;
         resultSection.classList.remove('hidden');
         showToast('Success!', 'Your download link is ready');
       } else {
@@ -68,18 +76,18 @@ const showToast = (title, description, variant = 'default') => {
     })
     .finally(() => {
       clearTimeout(timeoutId);
-      downloadButton.classList.remove('hidden');
+      downloadButton.disabled = false;
       loadingSpinner?.classList.add('hidden');
     });
 };
- 
 
-// ✅ Event Listeners
+// Event Listeners
 downloadButton.addEventListener('click', handleDownload);
 
 urlInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') handleDownload();
 });
+
 copyButton.addEventListener('click', async () => {
   try {
     const anchor = downloadLink.querySelector('a');
@@ -95,12 +103,11 @@ copyButton.addEventListener('click', async () => {
 });
 
 downloadNowButton.addEventListener('click', () => {
- let link;
-   try {
+  let link;
+  try {
     const anchor = downloadLink.querySelector('a');
     if (anchor) {
-       link=anchor.href
-      
+      link = anchor.href;
     } else {
       throw new Error('No link found');
     }
