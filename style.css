@@ -585,3 +585,31 @@ button{
   scale: 0.95;
   background: rgb(174, 170, 170);
 }
+
+
+
+#videoUrl{
+  width: 99%;
+  padding-top: 1.5rem;
+  display: flex;
+  padding-bottom: 1.5rem;
+  padding-inline:0 ;
+}
+#videoUrl::placeholder{
+  padding-left:2.5rem ;
+}
+.inputwidth{
+  width: 100%;
+}
+
+.input2{
+  display: none;
+}
+@media (max-width:768px) {
+ .input1{
+  display: none;
+ } 
+ .input2{
+  display: block;
+ } 
+}
