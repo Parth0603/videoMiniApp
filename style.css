@@ -589,14 +589,12 @@ button{
 
 
 #videoUrl{
-  width: 99%;
+  width: calc(99% - 45px);
   padding-top: 1.5rem;
   display: flex;
   padding-bottom: 1.5rem;
-  padding-inline:0 ;
-}
-#videoUrl::placeholder{
-  padding-left:2.5rem ;
+  padding-left:45px ;
+  /* padding-right: -30px; */
 }
 .inputwidth{
   width: 100%;
