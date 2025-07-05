@@ -37,7 +37,7 @@ const showToast = (title, description, variant = 'default') => {
 
 const handleDownload = () => {
   const url = urlInput.value.trim();
-
+  
   if (!url) {
     showToast('Please enter a URL', 'Paste a video URL to get started', 'destructive');
     return;
