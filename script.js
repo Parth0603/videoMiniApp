@@ -1,6 +1,6 @@
 const urlInput = document.getElementById('videoUrl');
 const downloadButton = document.getElementById('downloadButton');
-const loadingSpinner = document.getElementById('loadingSpinner');
+// const loadingSpinner = document.getElementById('loadingSpinner');
 const resultSection = document.getElementById('resultSection');
 const downloadLink = document.getElementById('result');
 const copyButton = document.getElementById('copyButton');
@@ -44,7 +44,6 @@ const handleDownload = () => {
   }
 
   downloadButton.disabled = true;
-  loadingSpinner.classList.remove('hidden');
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 20000);
@@ -75,7 +74,7 @@ const handleDownload = () => {
     .finally(() => {
       clearTimeout(timeoutId);
       downloadButton.disabled = false;
-      loadingSpinner.classList.add('hidden');
+      // loadingSpinner.classList.add('hidden');
     });
 };
 
